@@ -1,4 +1,4 @@
-import data_preprocessing_template as dpt
+from py_scripts import data_preprocessing_template as dpt
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 

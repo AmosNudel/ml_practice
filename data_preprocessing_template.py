@@ -12,7 +12,7 @@ from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.preprocessing import StandardScaler
 
 # Import the file selection functionality
-from select_data import csv_path
+from py_scripts.select_data import csv_path
 
 # Use the selected file path directly
 dataset = pd.read_csv(csv_path)
