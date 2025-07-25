@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from py_scripts import data_preprocessing_template as dpt
+from py_scripts.utils import preprocess_new_data
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 
@@ -19,35 +20,50 @@ y_pred = regressor.predict(dpt.X_test)
 np.set_printoptions(precision=2)
 print(np.concatenate((y_pred.reshape(len(y_pred),1), dpt.y_test.reshape(len(dpt.y_test),1)),1))
 
-# Single prediction with user input
+# Single prediction with user input - PROPER ML ENGINEERING APPROACH
 print("\n--- Make a Single Prediction ---")
 rd_spend = float(input("Enter R&D Spend: "))
 admin = float(input("Enter Administration: "))
 marketing = float(input("Enter Marketing Spend: "))
 state = input("Enter State (New York/California/Florida): ")
 
-# Take the first row from training data as template and modify it
-user_input = dpt.X_train[0:1].copy()  # Copy first row
+# Use the preprocessing function from the training pipeline
+user_input_dict = {
+    'R&D Spend': rd_spend,
+    'Administration': admin,
+    'Marketing Spend': marketing,
+    'State': state
+}
 
-# Find the positions of the numeric features by checking a known training sample
-# The last 3 features should be R&D, Admin, Marketing based on the preprocessing
-user_input[0, -3] = rd_spend    # R&D Spend  
-user_input[0, -2] = admin       # Administration
-user_input[0, -1] = marketing   # Marketing Spend
+# Process user input using the EXACT same pipeline as training
+processed_input = preprocess_new_data(user_input_dict, dpt.X_train)
 
-# Set state encoding (first 3 features are the state one-hot encoding)
-user_input[0, 0] = 1 if state == "California" else 0
-user_input[0, 1] = 1 if state == "Florida" else 0  
-user_input[0, 2] = 1 if state == "New York" else 0
-
-# Make prediction (input is already scaled like training data)
-prediction = regressor.predict(user_input)
-print(f"Predicted Profit: ${prediction[0]:.2f}")
+# Make prediction
+if processed_input.shape[1] == dpt.X_train.shape[1]:
+    prediction = regressor.predict(processed_input)
+    print(f"\n🎯 Predicted Profit: ${prediction[0]:.2f}")
+    print("\n✅ SUCCESS! User input processed through same pipeline as training data.")
+else:
+    print(f"\n❌ Shape mismatch: {processed_input.shape[1]} vs {dpt.X_train.shape[1]}")
+    print("   This indicates the preprocessing function needs adjustment.")
 
 '''
 R&D Spend: 165000
 Administration: 136000
 Marketing Spend: 470000
+State: Florida
+prediction: $475033346.56
+
+R&D Spend: 130000
+Administration: 100000
+Marketing Spend: 300000
+State: Florida
+prediction: $258439926.15
+
+R&D Spend: 330000
+Administration: 300000
+Marketing Spend: 700000
 State: New York
+prediction: $608363197.50
 
 '''

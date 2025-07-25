@@ -29,10 +29,6 @@ def script_path_to_module(script_path):
 
 
 def main():
-    print(f'Current working directory: {os.getcwd()}')
-    print(f'sys.path: {sys.path}')
-    print(f'BASE_DIR: {BASE_DIR}')
-    print(f'PY_SCRIPTS_DIR: {PY_SCRIPTS_DIR}')
     script_path = select_script()
     if not script_path:
         print('No script selected. Exiting.')
@@ -41,10 +37,8 @@ def main():
     if not module_name:
         print('Selected script is not inside py_scripts. Exiting.')
         sys.exit(1)
-    print(f'Running module: {module_name}')
     env = os.environ.copy()
     env['PYTHONPATH'] = BASE_DIR
-    print(f'PYTHONPATH for subprocess: {env["PYTHONPATH"]}')
     try:
         result = subprocess.run([
             sys.executable, '-m', module_name
