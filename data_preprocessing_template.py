@@ -11,17 +11,10 @@ from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 # For feature scaling
 from sklearn.preprocessing import StandardScaler
 
-def find_file(filename, search_path="."):
-    """Recursively search for a file with the given filename starting from search_path."""
-    for root, dirs, files in os.walk(search_path):
-        if filename in files:
-            return os.path.join(root, filename)
-    raise FileNotFoundError(f"{filename} not found in {search_path}")
+# Import the file selection functionality
+from select_data import csv_path
 
-# Find the data file path
-csv_filename = 'Salary_Data.csv'  # Change this as needed for other files
-csv_path = find_file(csv_filename, search_path="..")  # Search from project root
-
+# Use the selected file path directly
 dataset = pd.read_csv(csv_path)
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1].values
