@@ -10,9 +10,11 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 # For feature scaling
 from sklearn.preprocessing import StandardScaler
-
 # Import the file selection functionality
 from py_scripts.select_data import csv_path
+
+'''The test csv is data.csv'''
+
 
 # Use the selected file path directly
 dataset = pd.read_csv(csv_path)

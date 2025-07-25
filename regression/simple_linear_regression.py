@@ -2,6 +2,8 @@ from py_scripts import data_preprocessing_template as dpt
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
+'''The test csv is Salary_Data.csv'''
+
 # Training the Simple Linear Regression model on the Training set
 regressor = LinearRegression()
 regressor.fit(dpt.X_train, dpt.y_train)
